@@ -1,20 +1,46 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage('checkout from GIT'){
-            steps{
-               git branch: 'main', url: 'https://github.com/Elvish5979/aws-jenkins.git'
+    environment {
+        AWS_DEFAULT_REGION = 'us-east-1'
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
             }
         }
-        stage('Terraform Init'){
-            steps{
-                sh 'terraform init'
+        stage('Terraform Init') {
+            steps {
+                script {
+                    sh 'terraform init'
+                }
             }
         }
-        stage('Terraform Apply'){
-           steps{
-                sh 'terraform apply --auto-approve'
-           }
+        stage('Terraform Plan') {
+            steps {
+                script {
+                    sh 'terraform plan -out=tfplan'
+                }
+            }
         }
-    }   
+        stage('Terraform Apply') {
+            steps {
+                script {
+                    sh 'terraform apply -auto-approve tfplan'
+                }
+            }
+        }
+        stage('Upload State to S3') {
+            steps {
+                script {
+                    sh 'aws s3 cp terraform.tfstate s3://tf-backend-elvish '
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
 }
