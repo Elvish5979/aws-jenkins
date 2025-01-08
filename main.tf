@@ -12,7 +12,7 @@ resource "aws_instance" "example" {
 
 terraform {
   backend "s3" {
-    bucket = ""
+    bucket = "tf-backend-elvish"
     key    = "terraform.tfstate"
     region = "us-east-1"
   }
