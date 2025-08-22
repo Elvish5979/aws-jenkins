@@ -21,7 +21,7 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                dir("environments/${params.ENVIRONMENT}") {
+                dir("${params.ENVIRONMENT}") {
                     sh "terraform init"
                 }
             }
@@ -29,7 +29,7 @@ pipeline {
 
         stage('Terraform Validate') {
             steps {
-                dir("environments/${params.ENVIRONMENT}") {
+                dir("${params.ENVIRONMENT}") {
                     sh "terraform validate"
                 }
             }
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                dir("environments/${params.ENVIRONMENT}") {
+                dir("${params.ENVIRONMENT}") {
                     sh "terraform plan -out=tfplan"
                     archiveArtifacts artifacts: "environments/${params.ENVIRONMENT}/tfplan"
                 }
@@ -55,7 +55,7 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                dir("environments/${params.ENVIRONMENT}") {
+                dir("${params.ENVIRONMENT}") {
                     sh "terraform apply -auto-approve tfplan"
                 }
             }
