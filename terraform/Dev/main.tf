@@ -6,5 +6,6 @@ module "secure_bucket" {
   tags = {
     Environment = "dev"
     Owner       = "Vishal"
+    Project     = "Jenkins"
   }
 }
